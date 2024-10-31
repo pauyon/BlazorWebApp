@@ -1,0 +1,63 @@
+﻿@inherits LayoutComponentBase
+
+@* Required *@
+<MudThemeProvider @bind-IsDarkMode="UIConstants.IsDarkMode" />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        <MudText Typo="Typo.h5" Class="ml-3">Blazor Web App</MudText>
+        <MudSpacer />
+        <MudSwitch T="bool" Value="@UIConstants.IsDarkMode" Label="Dark Mode" ValueChanged="@ToggleDarkMode" />
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2" Variant="@DrawerVariant.Persistent">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+
+    [Inject]
+    public IPreferencesService PreferencesService { get; set; } = default!;
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private void ToggleDarkMode(bool value)
+    {
+        PreferencesService.SetDarkModePreference(value);
+        StateHasChanged();
+    }
+
+    private async Task InitializeTheme()
+    {
+        var darkThemeValue = await PreferencesService.GetDarkModePreference();
+        await PreferencesService.SetDarkModePreference(darkThemeValue);
+
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await InitializeTheme();
+        }
+    }
+}
