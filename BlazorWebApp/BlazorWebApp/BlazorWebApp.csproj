@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MudBlazor.Shared\MudBlazor.Shared.csproj" />
     <ProjectReference Include="..\BlazorWebApp.Client\BlazorWebApp.Client.csproj" />
     <ProjectReference Include="..\MudBlazor.Shared\MudBlazor.Shared.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />

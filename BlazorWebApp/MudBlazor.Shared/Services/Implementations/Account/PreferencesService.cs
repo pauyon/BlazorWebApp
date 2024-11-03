@@ -19,6 +19,12 @@ public class PreferencesService : IPreferencesService
     public async Task<bool> GetDarkModePreference()
     {
         var isDarkModeString = await _js!.InvokeAsync<string>("localStorage.getItem", darkModeKey);
+
+        if (string.IsNullOrEmpty(isDarkModeString))
+        {
+            return false;
+        }
+
         return isDarkModeString.ToLower() == "true";
     }
 
